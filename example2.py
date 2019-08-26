@@ -108,5 +108,23 @@ for a in range(2): #range 1 because it's only one ant
 ################################################################
 
 # Update pheromones
+# evaporate every path's pheromone
+# get total distance of each ant
+# update in every path with 1/total distance
 
-print ants
+# evaporate pheromones
+for i in range(len(ph)):
+	for j in range(len(ph[i])):
+		ph[i][j] -= ph[i][j]*e
+
+for a in range(len(ants)): # for every ant
+	cost = 0 # equals total distance traveled by ant
+	for i in range(1, len(ants[a])):
+		cost += d[ants[a][i-1]][ants[a][i]]
+	for i in range(len(ph)):
+		for j in range(len(ph[i])):
+			ph[i][j] += 1.0/cost
+
+
+
+

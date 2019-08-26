@@ -1,2 +1,2 @@
 # ACOsalesman
-An ant colony optimization apply to the salesman problem
+An ant colony optimization applied to the salesman problem

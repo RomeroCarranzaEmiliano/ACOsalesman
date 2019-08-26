@@ -11,16 +11,6 @@ d = [
 ]
 
 
-# calculate visibility between cities by performing 1/d  in the distances matrix
-h = []
-for i in range(len(d)):
-	h.append([])
-	for j in range(len(d[i])):
-		if (d[i][j] != 0):
-			h[i].append(float(1./d[i][j]))
-		else:
-			h[i].append(0)
-
 # provide initial values of pheromones
 ph = []
 for i in range(len(d)):
@@ -44,52 +34,79 @@ for i in range(len(d)):
 ## diferent for every ant
 ##
 	
-# calculate probability of going form city 1 to any other
+# fix parameters
 alpha = 1
 beta = 2
+e = 0.5 #evaporation coefficient
 
-prob = 0
-p = [] # array of probabilities
-E = 0 # sumatory of all probabilities
-for i in range(5):
-	prob = (ph[0][i]**(alpha)) *(h[0][i]**(beta))
-	p.append(prob)
-	E += prob
+ants = []
 
-for i in range(len(p)):
-	p[i] = p[i]/E
+for a in range(2): #range 1 because it's only one ant
+	
+	# creation of an ant
+	ants.append([0]) # 0 because all ants start at city cero
 
-# get cumulative probabilities
-i;
-for i in range(len(p)-1, 0, -1): #from end to start of array!!
-	for j in range(i):
-		p[i] += p[j]
+	city = 0 # starting city
 
-# generation of random number
-r = random.uniform(0, 1)
+	# calculate visibility between cities by performing 1/d  in the distances matrix
+	h = []
+	for i in range(len(d)):
+		h.append([])
+		for j in range(len(d[i])):
+			if (d[i][j] != 0):
+				h[i].append(float(1./d[i][j]))
+			else:
+				h[i].append(0)
+	
+	while (1):
 
-# get selected city
-city = 0
-while (p[city] < r):
-	city += 1
+		# calculate probability of going form city 1 to any other
+		prob = 0
+		p = [] # array of probabilities
+		E = 0 # sumatory of all probabilities
+		for i in range(5):
+			prob = (ph[city][i]**(alpha)) *(h[city][i]**(beta))
+			p.append(prob)
+			E += prob
 
-# update visibility of city visited
-# given that every city can be visited only once
-h[0][city] = 0;
-h[1][city] = 0;
-h[2][city] = 0;
-h[3][city] = 0;
+		for i in range(len(p)):
+			p[i] = p[i]/E
 
-#######################################################
-##   A list of arrays containing the cities visited  ##
-## by every ant should be resulted here              ##
-#######################################################
+		# get cumulative probabilities
+		i;
+		for i in range(len(p)-1, 0, -1): #from end to start of array!!
+			for j in range(i):
+				p[i] += p[j]
 
+		# generation of random number
+		r = random.uniform(0, 1)
 
+		# get selected city
+		city = 0
+		while (p[city] < r):
+			city += 1
+
+		# store city in ant's path
+		ants[a].append(city)
+
+		# update visibility of city visited
+		# given that every city can be visited only once
+		for i in range(len(h)):
+			h[i][city] = 0
+
+		#break while loop when all h == 0
+		path_complete = True
+		for i in range(len(h)):
+			for j in range(len(h[i])):
+				if (h[i][j] != 0):
+					path_complete = False
+		if (path_complete == True):
+			break
+		
 
 ### ONCE THE PROCESS IS REPEATED FOR EVERY CITY AND EVERY ANT###
 ################################################################
 
 # Update pheromones
 
-e = 0.5 #evaporation coefficient
+print ants
